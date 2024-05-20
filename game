@@ -1,0 +1,59 @@
+import pickle
+
+class Player:
+    def __init__(self):
+        self.dictionary = ["меч", "таємнича картка", "факел", "магічна книга"]
+        self.quotes_file = "quotes.txt"
+        self.dictionary_file = "dictionary.dat"
+
+    def explore_treasure(self, treasure):
+        print("Вивчаємо вміст скарбу...")
+        for item in treasure:
+            print(f"Знайдено: {item}")
+            if item == "Кристал Пізнання":
+                self.add_to_dictionary(item)
+                self.say_quote("Знання - це сила, а сила - це ключ до всіх дверей!")
+
+    def add_to_dictionary(self, item):
+        self.dictionary.append(item)
+        self.save_dictionary()
+
+    def save_dictionary(self):
+        with open(self.dictionary_file, "wb") as file:
+            pickle.dump(self.dictionary, file)
+
+    def load_dictionary(self):
+        try:
+            with open(self.dictionary_file, "rb") as file:
+                self.dictionary = pickle.load(file)
+        except FileNotFoundError:
+            print("Файл словника не знайдено. Початковий словник використовується.")
+
+    def say_quote(self, quote):
+        print(f"Персонаж вигукнув: {quote}")
+        with open(self.quotes_file, "w") as file:
+            file.write(quote)
+
+    def read_quote_from_file(self):
+        try:
+            with open(self.quotes_file, "r") as file:
+                quote = file.read()
+                print(f"Прочитано з файлу: {quote}")
+        except FileNotFoundError:
+            print("Файл цитат не знайдено.")
+
+# Початок гри
+player = Player()
+player.load_dictionary()
+
+# Приклад скарбу
+treasure_contents = ["меч", "таємнича книга", "Кристал Пізнання", "скриня з золотом"]
+
+# Гравець вивчає скарб
+player.explore_treasure(treasure_contents)
+
+# Збереження словника після оновлення
+player.save_dictionary()
+
+# Читання цитати з файлу
+player.read_quote_from_file()
